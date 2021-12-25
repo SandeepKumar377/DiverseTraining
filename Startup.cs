@@ -28,6 +28,7 @@ namespace DiverseTraining
             services.AddControllers();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiverseTraining", Version = "v1" });

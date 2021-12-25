@@ -30,7 +30,7 @@ namespace DiverseTraining.Controllers
             var book = await _bookService.GetBookById(id);
             if (book == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             return Ok(book);
         }

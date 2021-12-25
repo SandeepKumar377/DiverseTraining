@@ -26,6 +26,7 @@ namespace DiverseTraining.Service
                 Name = userRegisterDto.Name,
                 Email = userRegisterDto.Email.ToLower(),
                 Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userRegisterDto.Password)), //password convert into Hash
+                PasswordSalt=hmac.Key, // Private Key
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

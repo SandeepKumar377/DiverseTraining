@@ -13,9 +13,11 @@ namespace DiverseTraining.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ITokenService _tokenService;
+        public AccountController(IAccountService accountService, ITokenService tokenService)
         {
             _accountService = accountService;
+            _tokenService = tokenService;
         }
 
         //User Registration endpoint
@@ -28,8 +30,8 @@ namespace DiverseTraining.Controllers
                 return BadRequest("User already exist");
             }
             var user = await _accountService.SignUp(userRegisterDto);
-            // return Ok();
-            return Created("~/api/account/register", new { userRegisterDto.Name });
+            var token = _tokenService.GenerateToken(userRegisterDto.Email);
+            return Created("~/api/account/register", new { userRegisterDto.Email, token });
         }
     }
 }
