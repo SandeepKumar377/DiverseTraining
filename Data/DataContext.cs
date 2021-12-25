@@ -11,7 +11,7 @@ namespace DiverseTraining.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {}
-        public DbSet<Users> Users { get; set; }
+        public DbSet<UserRegister> Users { get; set; }
         public DbSet<Books> Books { get; set; }
     }
 }

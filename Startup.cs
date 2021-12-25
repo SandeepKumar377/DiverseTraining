@@ -1,4 +1,6 @@
 using DiverseTraining.Data;
+using DiverseTraining.Interface;
+using DiverseTraining.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,8 @@ namespace DiverseTraining
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbString")));
 
             services.AddControllers();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiverseTraining", Version = "v1" });
