@@ -30,8 +30,8 @@ namespace DiverseTraining.Controllers
                 return BadRequest("User already exist");
             }
             var user = await _accountService.SignUp(userRegisterDto);
-            var token = _tokenService.GenerateToken(userRegisterDto.Email);
+            var token = _tokenService.GenerateToken(user.Email);
             return Created("~/api/account/register", new { userRegisterDto.Email, token });
-        }
+        }       
     }
 }

@@ -1,13 +1,9 @@
-using DiverseTraining.Data;
-using DiverseTraining.Interface;
-using DiverseTraining.Service;
+using DiverseTraining.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace DiverseTraining
 {
@@ -17,22 +13,14 @@ namespace DiverseTraining
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbString")));
-
-            services.AddControllers();
-            services.AddScoped<IBookService, BookService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiverseTraining", Version = "v1" });
-            });
+            services.AddAppServices(Configuration);
+            services.AddInterfaceServices();
+            services.AddTokenServices(Configuration);   
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +32,10 @@ namespace DiverseTraining
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiverseTraining v1"));
             }
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace DiverseTraining.Service
         }
 
         //User Registration method
-        public async Task<UserRegisterDto> SignUp(UserRegisterDto userRegisterDto)
+        public async Task<UserRegister> SignUp(UserRegisterDto userRegisterDto)
         {
             using var hmac = new HMACSHA512();           // convert password into Hash (algorithm) 
             var user = new UserRegister()
@@ -26,17 +27,17 @@ namespace DiverseTraining.Service
                 Name = userRegisterDto.Name,
                 Email = userRegisterDto.Email.ToLower(),
                 Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userRegisterDto.Password)), //password convert into Hash
-                PasswordSalt=hmac.Key, // Private Key
+                PasswordSalt = hmac.Key, // Private Key
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return userRegisterDto;
-        }
+            return user;
+        }        
 
         //check user is already exist or not method
         public async Task<bool> UserExists(string email)
         {
-            return await _context.Users.AnyAsync(x => x.Email == email.ToLower());                         
+            return await _context.Users.AnyAsync(x => x.Email == email.ToLower());
         }
     }
 }

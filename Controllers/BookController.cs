@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DiverseTraining.DTOs;
 using DiverseTraining.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiverseTraining.Controllers
@@ -19,12 +20,14 @@ namespace DiverseTraining.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllBooks()
         {
             var books = await _bookService.GetAllBooks();
             return Ok(books);
         }
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetBook(int id)
         {
             var book = await _bookService.GetBookById(id);
@@ -48,7 +51,5 @@ namespace DiverseTraining.Controllers
             await _bookService.UpdateBook(id, bookDto);
             return Ok();
         }
-
-
     }
 }

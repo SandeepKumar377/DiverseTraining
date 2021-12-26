@@ -19,5 +19,6 @@ namespace DiverseTraining.DTOs
         
         [Required]
         public string ConfirmPassword { get; set; }
+
     }
 }
