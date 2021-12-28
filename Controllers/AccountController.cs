@@ -31,7 +31,24 @@ namespace DiverseTraining.Controllers
             }
             var user = await _accountService.SignUp(userRegisterDto);
             var token = _tokenService.GenerateToken(user.Email);
-            return Created("~/api/account/register", new { userRegisterDto.Email, token });
-        }       
+            return Created("~/api/account/register", new { user, token });
+        }
+
+        // User Login endpoint
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserLoginDto>> Login(UserLoginDto userLoginDto)
+        {
+            var user = await _accountService.SignIn(userLoginDto);
+            if (user == null)
+            {
+                return BadRequest("Invalid Credentials!");
+            }
+            return Ok(new
+            {
+                Token = _tokenService.GenerateToken(userLoginDto.Email),
+                user
+            });
+
+        }
     }
 }

@@ -11,7 +11,6 @@ namespace DiverseTraining.Interface
     {
         Task<UserRegister> SignUp(UserRegisterDto userRegisterDto);
         Task<bool> UserExists(string email);
-
-        // Task<UserLoginDto> SignIn(UserLoginDto userLoginDto);
+        Task<UserRegister> SignIn(UserLoginDto userLoginDto);
     }
 }

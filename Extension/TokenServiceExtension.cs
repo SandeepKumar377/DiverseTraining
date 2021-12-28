@@ -22,6 +22,6 @@ namespace DiverseTraining.Extension
                 };
             });
             return services;
-        }        
+        }
     }
 }
