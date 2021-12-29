@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiverseTraining.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211225163112_Init")]
-    partial class Init
+    [Migration("20211229123310_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,12 @@ namespace DiverseTraining.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserRegisterId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRegisterId");
 
                     b.ToTable("Books");
                 });
@@ -61,6 +66,22 @@ namespace DiverseTraining.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DiverseTraining.Entities.Books", b =>
+                {
+                    b.HasOne("DiverseTraining.Entities.UserRegister", "UserRegister")
+                        .WithMany("Books")
+                        .HasForeignKey("UserRegisterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRegister");
+                });
+
+            modelBuilder.Entity("DiverseTraining.Entities.UserRegister", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

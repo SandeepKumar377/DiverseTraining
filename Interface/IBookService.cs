@@ -8,9 +8,9 @@ namespace DiverseTraining.Interface
 {
     public interface IBookService
     {
-        Task<List<BookDto>> GetAllBooks();
-        Task<BookDto> GetBookById(int id);
-        Task<int> AddNewBook(BookDto bookDto);
-        Task UpdateBook(int id, BookDto bookDto);
+        Task<List<BookDto>> GetAllBooks(int userId);
+        Task<BookDto> GetBookById(int userId, int bookId);
+        Task<int> AddNewBook(BookDto bookDto, int userId);
+        Task<bool> UpdateBook(int bookId, BookDto bookDto, int userId);
     }
 }

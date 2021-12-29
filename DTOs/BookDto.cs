@@ -15,5 +15,7 @@ namespace DiverseTraining.DTOs
 
         [Required]
         public string Description { get; set; }
+
+        public int UserRegisterId { get; set; }
     }
 }

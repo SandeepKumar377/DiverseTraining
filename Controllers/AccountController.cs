@@ -22,7 +22,7 @@ namespace DiverseTraining.Controllers
 
         //User Registration endpoint
         [HttpPost("Register")]
-        public async Task<ActionResult<UserRegisterDto>> Register(UserRegisterDto userRegisterDto)
+        public async Task<ActionResult<UserRegisterDto>> Register([FromBody] UserRegisterDto userRegisterDto)
         {
             //check user is already exist or not
             if (await _accountService.UserExists(userRegisterDto.Email))
@@ -36,7 +36,7 @@ namespace DiverseTraining.Controllers
 
         // User Login endpoint
         [HttpPost("Login")]
-        public async Task<ActionResult<UserLoginDto>> Login(UserLoginDto userLoginDto)
+        public async Task<ActionResult<UserLoginDto>> Login([FromBody] UserLoginDto userLoginDto)
         {
             var user = await _accountService.SignIn(userLoginDto);
             if (user == null)
@@ -45,7 +45,7 @@ namespace DiverseTraining.Controllers
             }
             return Ok(new
             {
-                Token = _tokenService.GenerateToken(userLoginDto.Email),
+                Token = _tokenService.GenerateToken(user.Email),
                 user
             });
 

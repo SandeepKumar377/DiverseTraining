@@ -32,7 +32,12 @@ namespace DiverseTraining.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserRegisterId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRegisterId");
 
                     b.ToTable("Books");
                 });
@@ -59,6 +64,22 @@ namespace DiverseTraining.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DiverseTraining.Entities.Books", b =>
+                {
+                    b.HasOne("DiverseTraining.Entities.UserRegister", "UserRegister")
+                        .WithMany("Books")
+                        .HasForeignKey("UserRegisterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRegister");
+                });
+
+            modelBuilder.Entity("DiverseTraining.Entities.UserRegister", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

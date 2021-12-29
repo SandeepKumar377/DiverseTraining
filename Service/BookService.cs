@@ -18,47 +18,60 @@ namespace DiverseTraining.Service
         {
             _context = context;
         }
-        public async Task<List<BookDto>> GetAllBooks()
+
+        public async Task<List<BookDto>> GetAllBooks(int userId)
         {
-            var records = await _context.Books.Select(x => new BookDto()
+            var records = await _context.Books.Where(x => x.UserRegisterId == userId).Select(x => new BookDto()
             {
                 Id = x.Id,
                 Name = x.Name,
-                Description = x.Description
+                Description = x.Description,
             }).ToListAsync();
+            if (!records.Any())
+            {
+                return null;
+            }
             return records;
         }
-        public async Task<BookDto> GetBookById(int id)
+        public async Task<BookDto> GetBookById(int userId, int bookId)
         {
-            var records = await _context.Books.Where(x => x.Id == id).Select(x => new BookDto()
+            var record = await _context.Books.Where(x => x.Id == bookId && x.UserRegisterId==userId).Select(x => new BookDto()
             {
                 Id = x.Id,
                 Name = x.Name,
-                Description = x.Description
+                Description = x.Description,
             }).FirstOrDefaultAsync();
-            return records;
+            if (record == null)
+            {
+                return null;
+            }
+            return record;
         }
-        public async Task<int> AddNewBook(BookDto bookDto)
+        public async Task<int> AddNewBook(BookDto bookDto, int userId)
         {
             //convert BookModel data to Book
             var book = new Books()
             {
                 Name = bookDto.Name,
-                Description = bookDto.Description
+                Description = bookDto.Description,
+                UserRegisterId= userId                
             };
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
             return book.Id;
         }
-        public async Task UpdateBook(int id, BookDto bookDto)
+        public async Task<bool> UpdateBook(int bookId, BookDto bookDto, int userId)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book != null)
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id.Equals(bookId) && x.UserRegisterId.Equals(userId));
+            if (book==null)
             {
-                book.Name = bookDto.Name;
-                book.Description = bookDto.Description;
-                await _context.SaveChangesAsync();
+                return false;
             }
+            book.Name = bookDto.Name;
+            book.Description = bookDto.Description;
+            await _context.SaveChangesAsync();
+            return true;;
         }
     }
 }
+

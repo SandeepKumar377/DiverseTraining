@@ -19,18 +19,25 @@ namespace DiverseTraining.Controllers
             _bookService = bookService;
         }
 
+        //Get all books endpoint
         [HttpGet("")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetAllBooks([FromHeader] int userId)
         {
-            var books = await _bookService.GetAllBooks();
+            var books = await _bookService.GetAllBooks(userId);
+            if (books == null)
+            {
+                return NotFound();
+            }
             return Ok(books);
         }
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> GetBook(int id)
+
+        //Get book by id endpoint
+        [HttpGet("{bookId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBook([FromHeader] int userId,[FromRoute] int bookId)
         {
-            var book = await _bookService.GetBookById(id);
+            var book = await _bookService.GetBookById(userId, bookId);
             if (book == null)
             {
                 return NotFound();
@@ -38,17 +45,26 @@ namespace DiverseTraining.Controllers
             return Ok(book);
         }
 
+        //Add book endpoint
+        [Authorize]
         [HttpPost("")]
-        public async Task<IActionResult> AddBook([FromBody] BookDto bookDto)
+        public async Task<IActionResult> AddBook([FromBody] BookDto bookDto, [FromHeader] int userId)
         {
-            var id = await _bookService.AddNewBook(bookDto);
-            return CreatedAtAction(nameof(GetBook), new { id = id, controller = "book" }, id);
+            var bookId = await _bookService.AddNewBook(bookDto, userId);
+            return Ok(bookId);
+            // return CreatedAtAction(nameof(GetBook), new { id = bookId, controller = "book" }, bookId);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook([FromBody] BookDto bookDto, [FromRoute] int id)
+        //Update book endpoint
+        [Authorize]
+        [HttpPut("{bookId}")]
+        public async Task<IActionResult> UpdateBook([FromBody] BookDto bookDto, [FromRoute] int bookId, [FromHeader] int userId)
         {
-            await _bookService.UpdateBook(id, bookDto);
+            var result = await _bookService.UpdateBook(bookId, bookDto, userId);
+            if (result == false)
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     }
