@@ -39,10 +39,10 @@ namespace DiverseTraining.Service
         public async Task<UserRegister> SignIn(UserLoginDto userLoginDto)
         {
             var user = await _context.Users.Where(x => x.Email == userLoginDto.Email.ToLower()).FirstOrDefaultAsync();
-            if (user == null)
-            {
-                return null;
-            }
+            // if (user == null)
+            // {
+            //     return null;
+            // }
             //verify Hash Password for login user
             using (var hmac = new System.Security.Cryptography.HMACSHA512(user.PasswordSalt))
             {

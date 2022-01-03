@@ -19,9 +19,9 @@ namespace DiverseTraining.Service
             _context = context;
         }
 
-        public async Task<List<BookDto>> GetAllBooks(int userId)
+        public async Task<List<BookDto>> GetAllBooks()
         {
-            var records = await _context.Books.Where(x => x.UserRegisterId == userId).Select(x => new BookDto()
+            var records = await _context.Books.Select(x => new BookDto()
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -33,13 +33,14 @@ namespace DiverseTraining.Service
             }
             return records;
         }
-        public async Task<BookDto> GetBookById(int userId, int bookId)
+        public async Task<BookDto> GetBookById(int bookId)
         {
-            var record = await _context.Books.Where(x => x.Id == bookId && x.UserRegisterId==userId).Select(x => new BookDto()
+            var record = await _context.Books.Where(x => x.Id == bookId).Select(x => new BookDto()
             {
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
+                UserRegisterId=x.UserRegisterId
             }).FirstOrDefaultAsync();
             if (record == null)
             {
@@ -54,7 +55,7 @@ namespace DiverseTraining.Service
             {
                 Name = bookDto.Name,
                 Description = bookDto.Description,
-                UserRegisterId= userId                
+                UserRegisterId = userId
             };
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
@@ -63,14 +64,14 @@ namespace DiverseTraining.Service
         public async Task<bool> UpdateBook(int bookId, BookDto bookDto, int userId)
         {
             var book = await _context.Books.FirstOrDefaultAsync(x => x.Id.Equals(bookId) && x.UserRegisterId.Equals(userId));
-            if (book==null)
+            if (book == null)
             {
                 return false;
             }
             book.Name = bookDto.Name;
             book.Description = bookDto.Description;
             await _context.SaveChangesAsync();
-            return true;;
+            return true; ;
         }
     }
 }

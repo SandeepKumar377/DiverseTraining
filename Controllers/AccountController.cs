@@ -39,10 +39,10 @@ namespace DiverseTraining.Controllers
         public async Task<ActionResult<UserLoginDto>> Login([FromBody] UserLoginDto userLoginDto)
         {
             var user = await _accountService.SignIn(userLoginDto);
-            if (user == null)
-            {
-                return BadRequest("Invalid Credentials!");
-            }
+            // if (user == null)
+            // {
+            //     return BadRequest("Invalid Credentials!");
+            // }
             return Ok(new
             {
                 Token = _tokenService.GenerateToken(user.Email),

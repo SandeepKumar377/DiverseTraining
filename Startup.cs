@@ -1,3 +1,4 @@
+using API.DemoSample.Exceptions;
 using DiverseTraining.Extension;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,12 +29,12 @@ namespace DiverseTraining
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DiverseTraining v1"));
             }
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

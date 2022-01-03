@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DiverseTraining.DTOs;
 using DiverseTraining.Interface;
@@ -22,9 +19,9 @@ namespace DiverseTraining.Controllers
         //Get all books endpoint
         [HttpGet("")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllBooks([FromHeader] int userId)
+        public async Task<IActionResult> GetAllBooks()
         {
-            var books = await _bookService.GetAllBooks(userId);
+            var books = await _bookService.GetAllBooks();
             if (books == null)
             {
                 return NotFound();
@@ -35,9 +32,9 @@ namespace DiverseTraining.Controllers
         //Get book by id endpoint
         [HttpGet("{bookId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetBook([FromHeader] int userId,[FromRoute] int bookId)
+        public async Task<IActionResult> GetBook([FromRoute] int bookId)
         {
-            var book = await _bookService.GetBookById(userId, bookId);
+            var book = await _bookService.GetBookById(bookId);
             if (book == null)
             {
                 return NotFound();
@@ -51,8 +48,7 @@ namespace DiverseTraining.Controllers
         public async Task<IActionResult> AddBook([FromBody] BookDto bookDto, [FromHeader] int userId)
         {
             var bookId = await _bookService.AddNewBook(bookDto, userId);
-            return Ok(bookId);
-            // return CreatedAtAction(nameof(GetBook), new { id = bookId, controller = "book" }, bookId);
+            return CreatedAtAction(nameof(GetBook), new { id = bookId, controller = "book" }, bookId);
         }
 
         //Update book endpoint
