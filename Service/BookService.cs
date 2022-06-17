@@ -40,7 +40,7 @@ namespace DiverseTraining.Service
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
-                UserRegisterId=x.UserRegisterId
+                UserRegisterId = x.UserRegisterId
             }).FirstOrDefaultAsync();
             if (record == null)
             {
@@ -60,6 +60,7 @@ namespace DiverseTraining.Service
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
             return book.Id;
+
         }
         public async Task<bool> UpdateBook(int bookId, BookDto bookDto, int userId)
         {
@@ -71,7 +72,7 @@ namespace DiverseTraining.Service
             book.Name = bookDto.Name;
             book.Description = bookDto.Description;
             await _context.SaveChangesAsync();
-            return true; ;
+            return true; 
         }
     }
 }
